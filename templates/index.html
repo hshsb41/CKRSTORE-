@@ -1,19 +1,190 @@
-<!doctype html><meta charset=utf-8>
-<script>
-(()=>{
-let E=1788830460000;
-if(Date.now()>E)return document.body.innerHTML="";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>{{ name }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #000; color: #fff; height: 100vh; overflow: hidden; }
+        .modal { display: none; }
+        .modal.active { display: flex; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .tab-active { color: #10b981; }
+        input:focus { outline: none; border: none; ring: 0; }
+        .app-card { background: #0a0a0a; border: 1px solid #141414; }
+    </style>
+</head>
+<body class="flex flex-col select-none no-zoom">
 
-let u="world"+"time"+"api"+".org/api/ip";
-fetch("https://"+u).then(r=>r.json())
-.then(j=>{if(j.unixtime*1000>E)document.body.innerHTML=""})
-.catch(_=>0);
+    <!-- Header -->
+    <header class="px-7 py-7 bg-black border-b border-white/[0.03] sticky top-0 z-50">
+        <div class="flex justify-between items-center mb-6">
+            <div class="flex items-center gap-3 active:opacity-50 transition cursor-pointer" onclick="openRename()">
+                <img src="https://i.ibb.co/Y4KjTgvP/Picsart-26-02-07-02-21-57-621.jpg" class="w-8 h-8 rounded-lg border border-white/10 object-cover">
+                <h1 class="text-[10px] font-extrabold uppercase tracking-[0.2em] text-gray-300">{{ name }}</h1>
+            </div>
+            <button onclick="trigger('upload_file')" class="text-[#10b981] active:scale-90 transition">
+                <i data-lucide="plus-square" class="w-6 h-6"></i>
+            </button>
+        </div>
 
-let d=atob("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");
-let a=new Uint8Array(d.length);
-for(let i=0;i<d.length;i++)a[i]=d.charCodeAt(i)^37;
-document.open();
-document.write(new TextDecoder().decode(a));
-document.close();
-})();
-</script>
+        <!-- Search -->
+        <div class="relative mb-6">
+            <i data-lucide="search" class="absolute left-4 top-3.5 text-gray-700 w-4 h-4"></i>
+            <input type="text" id="searchInput" onkeyup="searchFiles()" placeholder="SEARCH" class="w-full bg-white/[0.02] rounded-2xl py-3.5 pl-12 pr-4 text-[9px] font-extrabold text-gray-500 border border-white/5 uppercase tracking-widest">
+        </div>
+
+        <!-- Navigation -->
+        <div class="flex justify-center gap-24">
+            <button onclick="switchTab('files')" id="tFiles" class="tab-active transition-all"><i data-lucide="layout-grid" class="w-5 h-5"></i></button>
+            <button onclick="switchTab('about')" id="tAbout" class="text-gray-800 transition-all"><i data-lucide="shield-info" class="w-5 h-5"></i></button>
+        </div>
+    </header>
+
+    <!-- Files View -->
+    <main id="filesView" class="flex-1 overflow-y-auto px-7 py-6 no-scrollbar">
+        <div class="space-y-4">
+            {% for f in files %}
+            <div class="app-card p-4 rounded-[2rem] flex items-center justify-between file-card" data-name="{{ f.name }}">
+                <div class="flex items-center gap-4 flex-1 min-w-0">
+                    <div onclick="trigger('change_logo', '{{ f.name }}')" class="w-12 h-12 bg-black border border-white/10 rounded-2xl flex items-center justify-center overflow-hidden active:scale-90 transition cursor-pointer">
+                        <img src="/get_icon/{{ f.name }}?ts={{ ts }}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="w-full h-full object-cover">
+                        <div class="hidden items-center justify-center w-full h-full text-gray-800"><i data-lucide="box" class="w-6 h-6"></i></div>
+                    </div>
+                    <div class="truncate">
+                        <p class="text-[11px] font-extrabold text-gray-200 truncate uppercase tracking-tighter">{{ f.name }}</p>
+                        <p class="text-[8px] font-extrabold text-gray-600 mt-1 tracking-widest flex items-center gap-1 uppercase">
+                            <i data-lucide="check-circle-2" class="w-3 h-3 text-[#10b981]"></i> Verified
+                        </p>
+                    </div>
+                </div>
+                <div class="flex gap-2 items-center">
+                    <a href="/download/{{ f.name }}" class="p-2.5 text-gray-700 active:text-[#10b981] transition"><i data-lucide="download" class="w-4.5 h-4.5"></i></a>
+                    <button onclick="trigger('delete_file', '{{ f.name }}')" class="p-2.5 text-gray-700 active:text-red-500 transition"><i data-lucide="trash-2" class="w-4.5 h-4.5"></i></button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </main>
+
+    <!-- About View (FIXED) -->
+    <main id="aboutView" class="hidden flex-1 overflow-y-auto px-10 py-12 text-center no-scrollbar">
+        <img src="https://i.ibb.co/Y4KjTgvP/Picsart-26-02-07-02-21-57-621.jpg" class="w-20 h-20 rounded-[1.8rem] mx-auto mb-10 shadow-2xl border border-white/10 object-cover">
+        
+        <div class="app-card rounded-[2.5rem] p-8 text-left space-y-6">
+            <div class="flex justify-between items-center"><i data-lucide="user" class="w-4 h-4 text-gray-600"></i><span class="text-[9px] font-extrabold uppercase text-gray-400">MAHENDRA</span></div>
+            <div class="flex justify-between items-center"><i data-lucide="terminal" class="w-4 h-4 text-[#10b981]"></i><span class="text-[9px] font-extrabold uppercase text-[#10b981]">CKRPRO</span></div>
+            <div class="flex justify-between items-center"><i data-lucide="calendar" class="w-4 h-4 text-gray-600"></i><span class="text-[9px] font-extrabold uppercase text-gray-400">FEB 2025</span></div>
+            <div class="flex justify-between items-center">
+                <i data-lucide="phone" class="w-4 h-4 text-gray-600"></i>
+                <a href="https://wa.me/9779840825493" class="text-[9px] font-extrabold uppercase text-gray-400">WhatsApp</a>
+            </div>
+            <div class="flex justify-between items-center pt-4 border-t border-white/5">
+                <i data-lucide="shield" class="w-4 h-4 text-gray-700"></i>
+                <span class="text-[8px] font-extrabold uppercase text-gray-500 tracking-[0.2em]">Private Tool</span>
+            </div>
+        </div>
+        
+        <p class="mt-12 text-[7px] font-extrabold text-gray-900 uppercase tracking-[0.6em]">CKRPRO V6.0</p>
+    </main>
+
+    <!-- Password Modal (Redesigned to match Rename Modal) -->
+    <div id="passModal" class="modal fixed inset-0 bg-black/95 z-[200] items-center justify-center p-8">
+        <div class="w-full max-w-[220px] text-center space-y-5">
+            <i data-lucide="lock" class="w-7 h-7 text-gray-800 mx-auto mb-4"></i>
+            <input type="password" id="mInput" placeholder=" " class="w-full bg-[#0a0a0a] py-4 border border-[#141414] rounded-2xl text-center font-bold text-white text-lg tracking-[0.5em] outline-none">
+            <div class="flex gap-4 pt-6">
+                <button onclick="closeM()" class="flex-1 text-gray-600 text-[10px] font-bold uppercase tracking-widest">Back</button>
+                <button id="confirmBtn" class="flex-1 text-white text-[10px] font-bold uppercase tracking-widest">Verify</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rename Modal -->
+    <div id="renameModal" class="modal fixed inset-0 bg-black/95 z-[200] items-center justify-center p-8 text-center">
+        <div class="w-full max-w-[220px] space-y-5">
+            <i data-lucide="settings-2" class="w-7 h-7 text-gray-800 mx-auto mb-4"></i>
+            <input type="text" id="newNameInput" placeholder="NAME" class="w-full bg-[#0a0a0a] py-3.5 border border-[#141414] rounded-xl text-center font-extrabold text-[9px] text-white tracking-widest">
+            <input type="password" id="adminPassInput" placeholder="KEY" class="w-full bg-[#0a0a0a] py-3.5 border border-[#141414] rounded-xl text-center font-extrabold text-[9px] text-white tracking-widest">
+            <div class="flex gap-4 pt-8">
+                <button onclick="closeRename()" class="flex-1 text-gray-700 text-[9px] font-extrabold uppercase">EXIT</button>
+                <button onclick="confirmRename()" class="flex-1 text-white text-[9px] font-extrabold uppercase">SAVE</button>
+            </div>
+        </div>
+    </div>
+
+    <input type="file" id="fInp" class="hidden">
+    <input type="file" id="iInp" class="hidden" accept="image/*">
+
+    <script>
+        lucide.createIcons();
+        let cur = ''; let tar = '';
+
+        function switchTab(t) {
+            const fV = document.getElementById('filesView'); 
+            const aV = document.getElementById('aboutView');
+            const tF = document.getElementById('tFiles'); 
+            const tA = document.getElementById('tAbout');
+            
+            if(t === 'files') {
+                fV.style.display = 'block'; aV.style.display = 'none';
+                tF.classList.add('tab-active'); tA.classList.remove('tab-active'); tA.classList.add('text-gray-800');
+            } else {
+                fV.style.display = 'none'; aV.style.display = 'block';
+                tA.classList.add('tab-active'); tF.classList.remove('tab-active'); tF.classList.add('text-gray-800');
+            }
+        }
+
+        function searchFiles() {
+            let q = document.getElementById('searchInput').value.toLowerCase();
+            let cards = document.getElementsByClassName('file-card');
+            for(let c of cards) c.style.display = c.dataset.name.toLowerCase().includes(q) ? 'flex' : 'none';
+        }
+
+        function trigger(a, n = '') {
+            cur = a; tar = n;
+            document.getElementById('passModal').classList.add('active');
+            document.getElementById('mInput').focus();
+        }
+
+        function closeM() { document.getElementById('passModal').classList.remove('active'); document.getElementById('mInput').value = ''; }
+        function openRename() { document.getElementById('renameModal').classList.add('active'); }
+        function closeRename() { document.getElementById('renameModal').classList.remove('active'); }
+
+        async function confirmRename() {
+            const n = document.getElementById('newNameInput').value;
+            const p = document.getElementById('adminPassInput').value;
+            const r = await fetch('/rename_app', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({name:n, password:p})});
+            if(r.ok) location.reload(); else alert("Error");
+        }
+
+        document.getElementById('confirmBtn').onclick = async () => {
+            const p = document.getElementById('mInput').value;
+            if(!p) return;
+            if(cur === 'upload_file') {
+                closeM();
+                document.getElementById('fInp').onchange = async (e) => {
+                    const fd = new FormData(); fd.append('file', e.target.files[0]); fd.append('password', p);
+                    const r = await fetch('/upload_file', {method:'POST', body:fd});
+                    if(r.ok) location.reload(); else alert("Fail");
+                };
+                document.getElementById('fInp').click();
+            } else if (cur === 'change_logo') {
+                closeM();
+                document.getElementById('iInp').onchange = async (e) => {
+                    const fd = new FormData(); fd.append('icon', e.target.files[0]); fd.append('filename', tar); fd.append('password', p);
+                    const r = await fetch('/set_icon', {method:'POST', body:fd});
+                    if(r.ok) location.reload(); else alert("Fail");
+                };
+                document.getElementById('iInp').click();
+            } else if (cur === 'delete_file') {
+                const r = await fetch('/delete', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({name:tar, password:p})});
+                if(r.ok) location.reload(); else alert("Error");
+            }
+        };
+    </script>
+</body>
+</html>
