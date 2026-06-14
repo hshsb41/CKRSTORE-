@@ -1,19 +1,18 @@
 import os
-import json
 import time
 from flask import Flask, render_template, request, jsonify, send_from_directory
 
 app = Flask(__name__)
 
-# Temporary storage (Railway मा Volume बिना रिस्टार्ट हुँदा यो खाली हुन्छ)
+# Railway Temporary Storage
 UPLOAD_FOLDER = '/tmp/uploads'
 ICON_FOLDER = '/tmp/icons'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(ICON_FOLDER, exist_ok=True)
 
 app.config['MAX_CONTENT_LENGTH'] = 500 * 1024 * 1024
-USER_PASS = "1234"
-ADMIN_PASS = "admin"
+USER_PASS = "9866"
+ADMIN_PASS = "9866"
 app_config = {"name": "CKR STORE"}
 
 @app.route('/')
