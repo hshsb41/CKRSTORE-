@@ -5,15 +5,13 @@ from flask import Flask, render_template, request, jsonify, send_from_directory
 
 app = Flask(__name__)
 
-# Storage folders (Temporary storage as no Volume is used)
-UPLOAD_FOLDER = 'uploads'
-ICON_FOLDER = 'icons'
+# Storage - Temporary (Railway मा Volume बिना रिस्टार्ट हुँदा यो खाली हुन्छ)
+UPLOAD_FOLDER = '/tmp/uploads'
+ICON_FOLDER = '/tmp/icons'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(ICON_FOLDER, exist_ok=True)
 
-# 500MB Upload Limit
 app.config['MAX_CONTENT_LENGTH'] = 500 * 1024 * 1024
-
 USER_PASS = "1234"
 ADMIN_PASS = "admin"
 app_config = {"name": "CKR STORE"}
@@ -76,6 +74,6 @@ def rename_app():
     return "Error", 401
 
 if __name__ == '__main__':
-    # Railway looks for PORT environment variable
+    # Railway PORT logic
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
