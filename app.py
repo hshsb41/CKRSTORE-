@@ -5,7 +5,7 @@ from flask import Flask, render_template, request, jsonify, send_from_directory
 
 app = Flask(__name__)
 
-# Storage - Temporary (Railway मा Volume बिना रिस्टार्ट हुँदा यो खाली हुन्छ)
+# Temporary storage (Railway मा Volume बिना रिस्टार्ट हुँदा यो खाली हुन्छ)
 UPLOAD_FOLDER = '/tmp/uploads'
 ICON_FOLDER = '/tmp/icons'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -74,6 +74,5 @@ def rename_app():
     return "Error", 401
 
 if __name__ == '__main__':
-    # Railway PORT logic
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
