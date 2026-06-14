@@ -5,13 +5,15 @@ from flask import Flask, render_template, request, jsonify, send_from_directory
 
 app = Flask(__name__)
 
-# Storage
+# Storage folders (Temporary storage as no Volume is used)
 UPLOAD_FOLDER = 'uploads'
 ICON_FOLDER = 'icons'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(ICON_FOLDER, exist_ok=True)
 
+# 500MB Upload Limit
 app.config['MAX_CONTENT_LENGTH'] = 500 * 1024 * 1024
+
 USER_PASS = "1234"
 ADMIN_PASS = "admin"
 app_config = {"name": "CKR STORE"}
@@ -19,12 +21,12 @@ app_config = {"name": "CKR STORE"}
 @app.route('/')
 def index():
     files = []
-    now = time.time()
-    for f in os.listdir(UPLOAD_FOLDER):
-        stat = os.stat(os.path.join(UPLOAD_FOLDER, f))
-        is_new = (now - stat.st_mtime) < (2 * 24 * 3600)
-        files.append({"name": f, "is_new": is_new, "time": stat.st_mtime})
-    files.sort(key=lambda x: x['time'], reverse=True)
+    try:
+        for f in os.listdir(UPLOAD_FOLDER):
+            stat = os.stat(os.path.join(UPLOAD_FOLDER, f))
+            files.append({"name": f, "time": stat.st_mtime})
+        files.sort(key=lambda x: x['time'], reverse=True)
+    except: pass
     return render_template('index.html', name=app_config['name'], files=files, ts=int(time.time()))
 
 @app.route('/upload_file', methods=['POST'])
@@ -74,4 +76,6 @@ def rename_app():
     return "Error", 401
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
+    # Railway looks for PORT environment variable
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
