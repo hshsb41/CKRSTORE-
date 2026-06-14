@@ -6,7 +6,7 @@
     <title>{{ name }}</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background: #000; color: #fff; height: 100vh; overflow: hidden; }
         .modal { display: none; }
@@ -14,100 +14,104 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .tab-active { color: #10b981; }
         input:focus { outline: none; border: none; ring: 0; }
-        .app-card { background: #080808; border: 1px solid #111; }
+        .app-card { background: #0a0a0a; border: 1px solid #141414; }
     </style>
 </head>
-<body class="flex flex-col no-zoom">
+<body class="flex flex-col select-none no-zoom">
 
     <!-- Header -->
-    <header class="px-6 py-6 border-b border-[#111] bg-black">
+    <header class="px-7 py-7 bg-black border-b border-white/[0.03] sticky top-0 z-50">
         <div class="flex justify-between items-center mb-6">
             <div class="flex items-center gap-3 active:opacity-50 transition cursor-pointer" onclick="openRename()">
-                <!-- Store Logo Fixed -->
-                <img src="https://i.ibb.co/Y4KjTgvP/Picsart-26-02-07-02-21-57-621.jpg" class="w-8 h-8 rounded-lg shadow-lg border border-[#222] object-cover">
-                <h1 class="text-sm font-extrabold tracking-tighter">{{ name }}</h1>
+                <img src="https://i.ibb.co/Y4KjTgvP/Picsart-26-02-07-02-21-57-621.jpg" class="w-8 h-8 rounded-lg border border-white/10 object-cover">
+                <h1 class="text-[10px] font-extrabold uppercase tracking-[0.2em] text-gray-300">{{ name }}</h1>
             </div>
             <button onclick="trigger('upload_file')" class="text-[#10b981] active:scale-90 transition">
-                <i data-lucide="plus-circle" class="w-6 h-6"></i>
+                <i data-lucide="plus-square" class="w-6 h-6"></i>
             </button>
         </div>
 
+        <!-- Search -->
         <div class="relative mb-6">
-            <i data-lucide="search" class="absolute left-4 top-3 text-gray-700 w-4 h-4"></i>
-            <input type="text" id="searchInput" onkeyup="searchFiles()" placeholder="Search..." class="w-full bg-[#080808] rounded-2xl py-3 pl-11 pr-4 text-[11px] font-bold text-gray-500 border border-[#111]">
+            <i data-lucide="search" class="absolute left-4 top-3.5 text-gray-700 w-4 h-4"></i>
+            <input type="text" id="searchInput" onkeyup="searchFiles()" placeholder="SEARCH CONSOLE" class="w-full bg-white/[0.02] rounded-2xl py-3.5 pl-12 pr-4 text-[9px] font-extrabold text-gray-500 border border-white/5 uppercase tracking-widest">
         </div>
 
-        <!-- Navigation Tabs -->
-        <div class="flex justify-center gap-16">
-            <button onclick="switchTab('files')" id="tFiles" class="tab-active transition-all"><i data-lucide="layers" class="w-6 h-6"></i></button>
-            <button onclick="switchTab('about')" id="tAbout" class="text-gray-800 transition-all"><i data-lucide="info" class="w-6 h-6"></i></button>
+        <!-- Navigation -->
+        <div class="flex justify-center gap-24">
+            <button onclick="switchTab('files')" id="tFiles" class="tab-active transition-all"><i data-lucide="layout-grid" class="w-5 h-5"></i></button>
+            <button onclick="switchTab('about')" id="tAbout" class="text-gray-800 transition-all"><i data-lucide="shield-info" class="w-5 h-5"></i></button>
         </div>
     </header>
 
-    <!-- Files Section -->
-    <main id="filesView" class="flex-1 overflow-y-auto px-6 py-6 no-scrollbar">
+    <!-- Files View -->
+    <main id="filesView" class="flex-1 overflow-y-auto px-7 py-6 no-scrollbar">
         <div class="space-y-4">
             {% for f in files %}
             <div class="app-card p-4 rounded-[2rem] flex items-center justify-between file-card" data-name="{{ f.name }}">
                 <div class="flex items-center gap-4 flex-1 min-w-0">
-                    <div onclick="trigger('change_logo', '{{ f.name }}')" class="w-12 h-12 bg-black border border-[#111] rounded-2xl flex items-center justify-center overflow-hidden active:scale-90 transition cursor-pointer">
+                    <div onclick="trigger('change_logo', '{{ f.name }}')" class="w-12 h-12 bg-black border border-white/10 rounded-2xl flex items-center justify-center overflow-hidden active:scale-90 transition cursor-pointer">
                         <img src="/get_icon/{{ f.name }}?ts={{ ts }}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" class="w-full h-full object-cover">
                         <div class="hidden items-center justify-center w-full h-full text-gray-800"><i data-lucide="box" class="w-6 h-6"></i></div>
                     </div>
                     <div class="truncate">
-                        <p class="text-[13px] font-bold text-gray-100 truncate leading-tight">{{ f.name }}</p>
-                        <p class="text-[9px] font-bold text-gray-600 mt-1 uppercase flex items-center gap-1"><i data-lucide="shield-check" class="w-3 h-3 text-emerald-500"></i> SECURE</p>
+                        <p class="text-[11px] font-extrabold text-gray-200 truncate uppercase tracking-tighter">{{ f.name }}</p>
+                        <p class="text-[8px] font-extrabold text-gray-600 mt-1 tracking-widest flex items-center gap-1 uppercase">
+                            <i data-lucide="check-circle-2" class="w-3 h-3 text-[#10b981]"></i> Verified
+                        </p>
                     </div>
                 </div>
-                <div class="flex gap-2">
-                    <a href="/download/{{ f.name }}" class="p-2 text-gray-700 active:text-emerald-400 transition"><i data-lucide="download" class="w-5 h-5"></i></a>
-                    <button onclick="trigger('delete_file', '{{ f.name }}')" class="p-2 text-gray-700 active:text-red-500 transition"><i data-lucide="trash-2" class="w-5 h-5"></i></button>
+                <div class="flex gap-2 items-center">
+                    <a href="/download/{{ f.name }}" class="p-2.5 text-gray-700 active:text-[#10b981] transition"><i data-lucide="download" class="w-4.5 h-4.5"></i></a>
+                    <button onclick="trigger('delete_file', '{{ f.name }}')" class="p-2.5 text-gray-700 active:text-red-500 transition"><i data-lucide="trash-2" class="w-4.5 h-4.5"></i></button>
                 </div>
             </div>
             {% endfor %}
         </div>
     </main>
 
-    <!-- About Section (Fixed Logo & WhatsApp) -->
-    <main id="aboutView" class="hidden flex-1 overflow-y-auto px-10 py-10 text-center no-scrollbar">
-        <!-- Main Logo in About -->
-        <img src="https://i.ibb.co/Y4KjTgvP/Picsart-26-02-07-02-21-57-621.jpg" class="w-24 h-24 rounded-[2.5rem] mx-auto mb-8 shadow-2xl border-4 border-[#111] object-cover">
+    <!-- About View (FIXED) -->
+    <main id="aboutView" class="hidden flex-1 overflow-y-auto px-10 py-12 text-center no-scrollbar">
+        <img src="https://i.ibb.co/Y4KjTgvP/Picsart-26-02-07-02-21-57-621.jpg" class="w-20 h-20 rounded-[1.8rem] mx-auto mb-10 shadow-2xl border border-white/10 object-cover">
         
         <div class="app-card rounded-[2.5rem] p-8 text-left space-y-6">
-            <div class="flex justify-between items-center text-gray-400"><i data-lucide="user" class="w-4 h-4"></i><span class="text-[10px] font-bold">MAHENDRA</span></div>
-            <div class="flex justify-between items-center text-emerald-500"><i data-lucide="terminal" class="w-4 h-4"></i><span class="text-[10px] font-bold uppercase tracking-widest">CKRPRO</span></div>
-            <div class="flex justify-between items-center text-gray-400"><i data-lucide="calendar" class="w-4 h-4"></i><span class="text-[10px] font-bold">FEB 2025</span></div>
-            <div class="flex justify-between items-center text-gray-400"><i data-lucide="shield" class="w-4 h-4"></i><span class="text-[10px] font-bold">MY STORE</span></div>
+            <div class="flex justify-between items-center"><i data-lucide="user" class="w-4 h-4 text-gray-600"></i><span class="text-[9px] font-extrabold uppercase text-gray-400">MAHENDRA</span></div>
+            <div class="flex justify-between items-center"><i data-lucide="terminal" class="w-4 h-4 text-[#10b981]"></i><span class="text-[9px] font-extrabold uppercase text-[#10b981]">CKRPRO</span></div>
+            <div class="flex justify-between items-center"><i data-lucide="calendar" class="w-4 h-4 text-gray-600"></i><span class="text-[9px] font-extrabold uppercase text-gray-400">FEB 2025</span></div>
+            <div class="flex justify-between items-center">
+                <i data-lucide="phone" class="w-4 h-4 text-gray-600"></i>
+                <a href="https://wa.me/9779840825493" class="text-[9px] font-extrabold uppercase text-gray-400">WhatsApp</a>
+            </div>
+            <div class="flex justify-between items-center pt-4 border-t border-white/5">
+                <i data-lucide="shield" class="w-4 h-4 text-gray-700"></i>
+                <span class="text-[8px] font-extrabold uppercase text-gray-500 tracking-[0.2em]">Private Tool</span>
+            </div>
         </div>
-
-        <!-- Sano WhatsApp Icon -->
-        <a href="https://wa.me/9779840825493" class="mt-8 inline-block opacity-60 hover:opacity-100 transition">
-            <i data-lucide="message-circle" class="w-6 h-6 text-emerald-500"></i>
-        </a>
         
-        <p class="mt-8 text-[8px] font-bold text-gray-800 uppercase tracking-[0.5em]"> </p>
+        <p class="mt-12 text-[7px] font-extrabold text-gray-900 uppercase tracking-[0.6em]">CKRPRO V6.0</p>
     </main>
 
-    <!-- Password Modal -->
-    <div id="passModal" class="modal fixed inset-0 bg-black/95 backdrop-blur-xl z-[200] items-center justify-center p-12">
-        <div class="w-full max-w-[180px] text-center">
-            <input type="password" id="mInput" placeholder="••••" class="w-full bg-[#080808] py-4 border border-[#111] rounded-2xl text-center font-bold text-white text-lg tracking-widest outline-none">
-            <div class="flex gap-6 mt-10 justify-center">
-                <button onclick="closeM()" class="text-gray-700 active:text-white"><i data-lucide="arrow-left-circle" class="w-8 h-8"></i></button>
-                <button id="confirmBtn" class="text-emerald-500 active:scale-90"><i data-lucide="check-circle" class="w-8 h-8"></i></button>
+    <!-- Password Modal (Redesigned to match Rename Modal) -->
+    <div id="passModal" class="modal fixed inset-0 bg-black/95 z-[200] items-center justify-center p-8">
+        <div class="w-full max-w-[220px] text-center space-y-5">
+            <i data-lucide="lock" class="w-7 h-7 text-gray-800 mx-auto mb-4"></i>
+            <input type="password" id="mInput" placeholder="ACCESS KEY" class="w-full bg-[#0a0a0a] py-4 border border-[#141414] rounded-2xl text-center font-bold text-white text-lg tracking-[0.5em] outline-none">
+            <div class="flex gap-4 pt-6">
+                <button onclick="closeM()" class="flex-1 text-gray-600 text-[10px] font-bold uppercase tracking-widest">Back</button>
+                <button id="confirmBtn" class="flex-1 text-white text-[10px] font-bold uppercase tracking-widest">Verify</button>
             </div>
         </div>
     </div>
 
     <!-- Rename Modal -->
     <div id="renameModal" class="modal fixed inset-0 bg-black/95 z-[200] items-center justify-center p-8 text-center">
-        <div class="w-full max-w-[220px] space-y-4">
-            <i data-lucide="settings" class="w-8 h-8 text-gray-800 mx-auto mb-4"></i>
-            <input type="text" id="newNameInput" placeholder="NAME" class="w-full bg-[#080808] py-3 border border-[#111] rounded-xl text-center font-bold text-xs text-white uppercase">
-            <input type="password" id="adminPassInput" placeholder="PASS" class="w-full bg-[#080808] py-3 border border-[#111] rounded-xl text-center font-bold text-xs text-white">
-            <div class="flex gap-4 pt-4">
-                <button onclick="closeRename()" class="flex-1 text-gray-600 text-[10px] font-bold">BACK</button>
-                <button onclick="confirmRename()" class="flex-1 text-white text-[10px] font-bold">SAVE</button>
+        <div class="w-full max-w-[220px] space-y-5">
+            <i data-lucide="settings-2" class="w-7 h-7 text-gray-800 mx-auto mb-4"></i>
+            <input type="text" id="newNameInput" placeholder="NEW NAME" class="w-full bg-[#0a0a0a] py-3.5 border border-[#141414] rounded-xl text-center font-extrabold text-[9px] text-white tracking-widest">
+            <input type="password" id="adminPassInput" placeholder="ACCESS KEY" class="w-full bg-[#0a0a0a] py-3.5 border border-[#141414] rounded-xl text-center font-extrabold text-[9px] text-white tracking-widest">
+            <div class="flex gap-4 pt-8">
+                <button onclick="closeRename()" class="flex-1 text-gray-700 text-[9px] font-extrabold uppercase">EXIT</button>
+                <button onclick="confirmRename()" class="flex-1 text-white text-[9px] font-extrabold uppercase">SAVE</button>
             </div>
         </div>
     </div>
@@ -120,13 +124,16 @@
         let cur = ''; let tar = '';
 
         function switchTab(t) {
-            const fV = document.getElementById('filesView'); const aV = document.getElementById('aboutView');
-            const tF = document.getElementById('tFiles'); const tA = document.getElementById('tAbout');
+            const fV = document.getElementById('filesView'); 
+            const aV = document.getElementById('aboutView');
+            const tF = document.getElementById('tFiles'); 
+            const tA = document.getElementById('tAbout');
+            
             if(t === 'files') {
-                fV.classList.remove('hidden'); aV.classList.add('hidden');
+                fV.style.display = 'block'; aV.style.display = 'none';
                 tF.classList.add('tab-active'); tA.classList.remove('tab-active'); tA.classList.add('text-gray-800');
             } else {
-                fV.classList.add('hidden'); aV.classList.remove('hidden');
+                fV.style.display = 'none'; aV.style.display = 'block';
                 tA.classList.add('tab-active'); tF.classList.remove('tab-active'); tF.classList.add('text-gray-800');
             }
         }
